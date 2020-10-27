@@ -14,6 +14,20 @@ int val_elbowTilt1 = 90;
 int val_elbowTilt2 = 90; 
 int val_bodyRotate = 90; 
 
+int t_val_grip = 0; 
+int t_val_wristRotate = 0; 
+int t_val_wristTilt = 0; 
+int t_val_elbowTilt1 = 0; 
+int t_val_elbowTilt2 = 0; 
+int t_val_bodyRotate = 0; 
+
+int dist_val_grip = 0; 
+int dist_val_wristRotate = 0; 
+int dist_val_wristTilt = 0; 
+int dist_val_elbowTilt1 = 0; 
+int dist_val_elbowTilt2 = 0; 
+int dist_val_bodyRotate = 0; 
+
 int initialPosition = 90;   
 
 void setup() {
@@ -57,6 +71,13 @@ void loop() {
 }
 
 void serialEvent() {
+  t_val_grip = val_grip;
+  t_val_wristRotate = val_wristRotate;
+  t_val_wristTilt = val_wristTilt;
+  t_val_elbowTilt1 = val_elbowTilt1;
+  t_val_elbowTilt2 = val_elbowTilt2;
+  t_val_bodyRotate = val_bodyRotate;
+    
   if(Serial.available()){
     val_grip = Serial.parseInt();
     val_wristRotate = Serial.parseInt();
@@ -72,13 +93,35 @@ void serialEvent() {
   Serial.println(val_elbowTilt2);
   Serial.println(val_bodyRotate);
 
-  test(val_grip, val_wristRotate, val_wristTilt, val_elbowTilt1, val_elbowTilt2,val_bodyRotate); 
-  // 똑바로 세우기 : 90 90 90 90 90 90
-  // 기본자세 : 90 90 150 0 30 90
+  dist_val_grip = t_val_grip - val_grip;
+  dist_val_wristRotate = t_val_wristRotate - val_wristRotate;
+  dist_val_wristTilt = t_val_wristTilt - val_wristTilt;
+  dist_val_elbowTilt1 = t_val_elbowTilt1 - val_elbowTilt1;
+  dist_val_elbowTilt2 = t_val_elbowTilt2 - val_elbowTilt2;
+  dist_val_bodyRotate = t_val_bodyRotate - val_bodyRotate;  
+
+  dist_val_grip = abs(dist_val_grip);
+  dist_val_wristRotate = abs(dist_val_wristRotate);
+  dist_val_wristTilt = abs(dist_val_wristTilt);
+  dist_val_elbowTilt1 = abs(dist_val_elbowTilt1);
+  dist_val_elbowTilt2 = abs(dist_val_elbowTilt2);
+  dist_val_bodyRotate = abs(dist_val_bodyRotate); 
+
+  Serial.println(dist_val_grip);
+  Serial.println(dist_val_wristRotate);
+  Serial.println(dist_val_wristTilt);
+  Serial.println(dist_val_elbowTilt1);
+  Serial.println(dist_val_elbowTilt2);
+  Serial.println(dist_val_bodyRotate);
+
+    test(val_grip, val_wristRotate, val_wristTilt, val_elbowTilt1, val_elbowTilt2,val_bodyRotate); 
+    // 똑바로 세우기 : 90 90 90 90 90 90
+    // 기본자세 : 90 90 150 0 30 90
 }
 
 
 void test(int _val_grip, int _val_wristRotate, int _val_wristTilt, int _val_elbowTilt1, int _val_elbowTilt2, int _val_bodyRotate) {
+  
   m_grip.write(_val_grip); 
   m_wristRotate.write(_val_wristRotate); 
   m_wristTilt.write(_val_wristTilt); 
