@@ -1,54 +1,76 @@
-#include <Servo.h>    // 서보모터 라이브러리
-
-Servo servo;    // 서보모터 사용을 위한 객체 생성
-
-int motor = 3;  // 서보모터의 핀 
-int angle = 90; // 서보모터 초기 각도 값
+//서보모터 라이브러리 참조
+#include <Servo.h>
+// 시리얼 통신 속도 및 서보모터 핀 설정
+#define BUADRATE 9600
+#define SERVO 3
+// myServo : 서보모터 클래스 변수 생성, 
+// strAngle : 시리얼 통신으로 입력 받을 angle 각도 저장
+Servo myServo;
+String strAngle;
+ 
+// angle : 서보모터 제어에 사용할 실제 angle 값
+// flag : 시리얼 통신으로 angle 입력시 이벤트를 발생 flag
+int angle;
+boolean flag = false;
+ 
 void setup() {
-  servo.attach(motor);  // 서보모터 연결
-  Serial.begin(9600);  // 시리얼 모니터 시작
-    
-  Serial.println("Enter the u or d"); // u 또는 d키 입력하기
-  Serial.println("u = angle + 15");   // u를 누른다면 현재 각도값에서 +15도
-  Serial.println("d = angle - 15\n");   // d를 누른다면 현재 각도값에서 -15도
+    myServo.attach(SERVO);
+    Serial.begin(BUADRATE);
+    while(!Serial){
+        ;
+    }
+    delay(500);
+    Serial.println("Program Start..");
+    Serial.print("Input Servo Angle >> ");
+}
+ 
+void loop() {
+    // 입력된 문자열이 유효값인지 판단을 위한 temp 변수
+    if(flag == true){
+        flag = false;
+        angle = strAngle.toInt();
+        strAngle = "";
+        // 입력된 값이 0 ~ 180 일때만 Servo 모터 제어
+        if (angle >= 0 && angle <= 180)
+        {
+            // angle 값 변경 후, read() 함수가 재대로 동작하도록 write() 함수 1회 실행
+            myServo.write(angle);
+            Serial.print("Servo Angle : ");
+            Serial.println(myServo.read());
+            Serial.print("Input Servo Angle >> ");
+        }
+        else
+        {
+            ErrorHadler();
+        }
+    }
+    delay(20);
+}
+ 
+// 시리얼 통신으로 문자 수신 되면 발생하는 함수
+// PC 에서 엔터가 눌러지면(캐리지 리턴 발생), flag 를 1 입력
+void serialEvent()
+{
+    char cTemp = (char)Serial.read();
+    if (isDigit(cTemp) || cTemp == '\b'){
+        strAngle += cTemp;
+    }
+    else if(cTemp == '\n'){
+        flag = true;
+    }
+    else if(cTemp == '\r'){
+        if (strAngle == "") ErrorHadler();
+    }
+    else{ /* if (cTemp < '0' || cTemp > '9') */
+        ErrorHadler();
+    }
+}
+ 
+// 시리얼 모니터에서 0 ~ 180 이외의 값 입력시 안내 메세지 출력
+void ErrorHadler()
+{
+    Serial.println("Error! Input Angle Number 0 to 180..");
+    strAngle = "";
+    Serial.print("Input Servo Angle >> ");
 }
 
-void loop() {
-  if(Serial.available())  // 시리얼모니터가 사용가능할 때
-  {
-    char input = Serial.read(); // 문자 입력받기
-    
-    if(input == 'u')    // u 키를 누를 때
-    {
-      Serial.print("+15");  // '+15'를 시리얼 모니터에 출력
-      for(int i = 0; i < 15; i++)  // 현재 각도에서 15도 더해주기
-      {
-        angle = angle + 1;   
-        if(angle >= 180)
-          angle = 180;
-                    
-        servo.write(angle); 
-        delay(10);
-      }
-      Serial.print("\t\t");
-      Serial.println(angle);  // 현재 각도 출력
-    } 
-    else if(input == 'd')   // 'd'키를 입력했을 때
-    {
-      Serial.print("\t-15\t");  // '-15'라고 출력
-      for(int i = 0 ; i < 15 ; i++)  // 현재 각도에서 15도 빼주기
-      {
-        angle = angle - 1;
-        if(angle <= 0)
-          angle = 0;
-        servo.write(angle);
-        delay(10);
-      }
-      Serial.println(angle);  // 현재 각도 출력
-    }
-    else  // 잘못된 문자열을 입력했을 때
-    {
-      Serial.println("wrong character!!");
-    }
-  }
-}
