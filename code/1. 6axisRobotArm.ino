@@ -2,8 +2,8 @@
 
 Servo m_grip; // 30: 그립 최대로 열기, 110: 그립 최대로 닫기, 동작 범위 벗어나지 않도록.
 Servo m_wristRotate; // CW 0 ~ CCW180
-Servo m_wristTilt; // 앞 180 ~ 뒤 0
-Servo m_elbowTilt1; // 앞 0 ~ 뒤 180
+Servo m_wristTilt; // 앞 0 ~ 뒤 180
+Servo m_elbowTilt1; // 앞 180 ~ 뒤 0
 Servo m_elbowTilt2; // 앞 180 ~ 뒤 0
 Servo m_bodyRotate; // CW 0 ~ CCW180
 
@@ -21,6 +21,10 @@ void setup() {
   //Openning
   m_grip.write(initialPosition); 
   m_wristRotate.write(initialPosition); 
+  m_wristTilt.write(initialPosition); 
+  m_elbowTilt1.write(initialPosition); 
+  m_elbowTilt2.write(initialPosition); 
+  m_bodyRotate.write(initialPosition);   
   delay(500);
   m_grip.write(30); 
   m_wristRotate.write(0); 
@@ -36,11 +40,33 @@ void setup() {
   m_elbowTilt1.write(initialPosition); 
   m_elbowTilt2.write(initialPosition); 
   m_bodyRotate.write(initialPosition); 
+  delay(1000);
 
   Serial.begin(9600);
   Serial.println("Program Start..");
 }
 
 void loop() {
-  m_grip.write(0);
+  low();
 }
+
+void stand() {
+  m_grip.write(initialPosition); 
+  m_wristRotate.write(initialPosition); 
+  m_wristTilt.write(initialPosition); 
+  m_elbowTilt1.write(initialPosition); 
+  m_elbowTilt2.write(initialPosition); 
+  m_bodyRotate.write(initialPosition); 
+  delay(500);
+}
+
+void low() {
+  m_grip.write(30); 
+  m_wristRotate.write(initialPosition); 
+  m_wristTilt.write(150); 
+  m_elbowTilt1.write(0); 
+  m_elbowTilt2.write(30); 
+  m_bodyRotate.write(initialPosition); 
+  delay(500);
+}
+
