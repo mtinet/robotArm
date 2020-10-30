@@ -1,3 +1,5 @@
+//Fast Motion
+
 #include <Servo.h>
 
 Servo m_grip; // 30: 그립 최대로 열기, 110: 그립 최대로 닫기, 동작 범위 벗어나지 않도록.
