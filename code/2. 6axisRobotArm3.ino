@@ -71,7 +71,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.available() {
+  if(Serial.available()) {
     cmd = Serial.read(); 
     if(cmd == 'a') {
       test(90, 90, 90, 90, 90, 90);
