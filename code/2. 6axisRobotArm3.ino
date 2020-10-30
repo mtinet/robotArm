@@ -16,12 +16,12 @@ int val_elbowTilt1 = 90;
 int val_elbowTilt2 = 90; 
 int val_bodyRotate = 90; 
 
-int t_val_grip = 0; 
-int t_val_wristRotate = 0; 
-int t_val_wristTilt = 0; 
-int t_val_elbowTilt1 = 0; 
-int t_val_elbowTilt2 = 0; 
-int t_val_bodyRotate = 0; 
+int t_val_grip = 90; 
+int t_val_wristRotate = 90; 
+int t_val_wristTilt = 90; 
+int t_val_elbowTilt1 = 90; 
+int t_val_elbowTilt2 = 90; 
+int t_val_bodyRotate = 90; 
 
 int dist_val_grip = 0; 
 int dist_val_wristRotate = 0; 
@@ -71,58 +71,28 @@ void setup() {
 }
 
 void loop() {
-  if(Serial.available()) {
-    cmd = Serial.read(); 
-    if(cmd == 'a') {
-      test(90, 90, 90, 90, 90, 90);
-    } else if (cmd == 'b') {
-      test(90, 90, 150, 0, 30, 90);
-    }
-  }
+
 }
 
 void serialEvent() {
-  t_val_grip = val_grip;
-  t_val_wristRotate = val_wristRotate;
-  t_val_wristTilt = val_wristTilt;
-  t_val_elbowTilt1 = val_elbowTilt1;
-  t_val_elbowTilt2 = val_elbowTilt2;
-  t_val_bodyRotate = val_bodyRotate;
-    
-  if(Serial.available()){
-    val_grip = Serial.parseInt();
-    val_wristRotate = Serial.parseInt();
-    val_wristTilt = Serial.parseInt();
-    val_elbowTilt1 = Serial.parseInt(); 
-    val_elbowTilt2 = Serial.parseInt();
-    val_bodyRotate = Serial.parseInt();
-  }    
-  Serial.println(val_grip);
-  Serial.println(val_wristRotate);
-  Serial.println(val_wristTilt);
-  Serial.println(val_elbowTilt1);
-  Serial.println(val_elbowTilt2);
-  Serial.println(val_bodyRotate);
+  cmd = Serial.read(); 
+  Serial.println(cmd);
+  if(cmd == 'a') {
+    test(90, 90, 150, 0, 50, 150);
+    Serial.println("a is received");
+  } else if (cmd == 'b') {
+    test(90, 90, 150, 0, 30, 90);
+    Serial.println("b is received");
+  } else if (cmd == 'c') {
+    test(30, 90, 150, 0, 30, 30);
+    Serial.println("c is received");
+  }
 
-  dist_val_grip = t_val_grip - val_grip;
-  dist_val_wristRotate = t_val_wristRotate - val_wristRotate;
-  dist_val_wristTilt = t_val_wristTilt - val_wristTilt;
-  dist_val_elbowTilt1 = t_val_elbowTilt1 - val_elbowTilt1;
-  dist_val_elbowTilt2 = t_val_elbowTilt2 - val_elbowTilt2;
-  dist_val_bodyRotate = t_val_bodyRotate - val_bodyRotate;  
-
-  //abs함수는 헷갈려서 지웠슴당
-  
-  Serial.println(dist_val_grip);
-  Serial.println(dist_val_wristRotate);
-  Serial.println(dist_val_wristTilt);
-  Serial.println(dist_val_elbowTilt1);
-  Serial.println(dist_val_elbowTilt2);
-  Serial.println(dist_val_bodyRotate);
-
-    test(val_grip, val_wristRotate, val_wristTilt, val_elbowTilt1, val_elbowTilt2,val_bodyRotate); 
-    // 똑바로 세우기 : 90 90 90 90 90 90
-    // 기본자세 : 90 90 150 0 30 90
+  test(val_grip, val_wristRotate, val_wristTilt, val_elbowTilt1, val_elbowTilt2,val_bodyRotate); 
+  // 똑바로 세우기 : 90 90 90 90 90 90
+  // 기본자세 : 90 90 150 0 30 90
+  // 왼쪽으로 틀기 : 90, 90, 150, 0, 50, 150
+  // 오른쪽으로 틀기 : 90, 90, 150, 0, 130, 150
 }
 
 
