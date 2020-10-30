@@ -16,7 +16,7 @@ int val_elbowTilt1 = 90;
 int val_elbowTilt2 = 90; 
 int val_bodyRotate = 90; 
 
-int t_val_grip = 90; 
+int t_val_grip = 90; a
 int t_val_wristRotate = 90; 
 int t_val_wristTilt = 90; 
 int t_val_elbowTilt1 = 90; 
